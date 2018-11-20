@@ -1,0 +1,12 @@
+$scale: 1.4;
+.icos {
+  display: flex;
+  align-items: center;
+  padding: 0 30px/$scale;
+  height: 115px/$scale;
+  background: #eee;
+}
+.painter {
+  height: 60px;
+  box-shadow: 6px/$scale 6px/$scale #da0289;
+}
