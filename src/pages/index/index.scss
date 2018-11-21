@@ -1,12 +1,71 @@
 $scale: 1.4;
+
+page {
+  height: 100%;
+}
+.index {
+  height: 100%;
+  width: 100%;
+  background-color: #eee;
+}
 .icos {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0 30px/$scale;
   height: 115px/$scale;
+  font-size: 26px;
   background: #eee;
+  color: #da0289;
+}
+.painterWrapper {
+  display: flex;
+  align-items: center;
 }
 .painter {
-  height: 60px;
-  box-shadow: 6px/$scale 6px/$scale #da0289;
+  margin-right: 22px/$scale;
+}
+.topic {
+  margin-left: 18px/$scale;
+}
+.player {
+  display: flex;
+  align-items: center;
+}
+.tool, .colors {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 24px/$scale;
+  height: 108px/$scale;
+}
+.lineWidth {
+  display: flex;
+  align-items: center;
+  width: 490px/$scale;
+  font-size: 32px;
+}
+.slider {
+  flex: 1;
+}
+.operate {
+  display: flex;
+  align-items: center;
+  padding-right: 30px/$scale;
+  font-size: 28px;
+}
+.ico {
+  display: flex;
+  align-items: center;
+  margin-left: 24px;
+}
+.colors {
+  align-items: center;
+  height: 80px/$scale;
+  font-size: 32px;
+}
+.color {
+  margin-left: 40px/$scale;
+  width: 80px/$scale;
+  height: 80px/$scale;
+  border-radius: 4px/$scale;
 }

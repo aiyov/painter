@@ -1,7 +1,8 @@
 import { ADD, MINUS } from '../constants/counter'
 
 const INITIAL_STATE = {
-  num: 0
+  num: 0,
+  colors: [1,2,3,4,5,6,7]
 }
 
 export default function counter (state = INITIAL_STATE, action) {
