@@ -1,7 +1,12 @@
-import {ComponentClass} from 'react'
-import Taro, {Component, Config} from '@tarojs/taro'
-import {View, Button, Text} from '@tarojs/components'
-import {connect} from '@tarojs/redux'
+import {ComponentClass} from 'react';
+import Taro, {Component, Config} from '@tarojs/taro';
+import {View, Button, Text, Icon, Canvas, Slider, ScrollView} from '@tarojs/components';
+import {connect} from '@tarojs/redux';
+
+import Back from '../../assets/ico/back.svg';
+import Delete from '../../assets/ico/delete.svg';
+import Eraser from '../../assets/ico/eraser.svg';
+
 
 import {add, minus, asyncAdd} from '../../actions/counter'
 
@@ -19,7 +24,8 @@ import './index.scss'
 
 type PageStateProps = {
   counter: {
-    num: number
+    num: number,
+    colors: []
   }
 }
 
@@ -64,7 +70,7 @@ class Index extends Component {
   config: Config = {
     navigationBarTitleText: '你画我猜',
     navigationBarBackgroundColor: '#fff001',
-    "navigationBarTextStyle": "black",
+    navigationBarTextStyle: "black",
   }
 
   componentWillReceiveProps(nextProps) {
@@ -84,12 +90,68 @@ class Index extends Component {
     return (
       <View className='index'>
         <View className="icos">
-          <View className="painter">
+          <View className="painterWrapper">
             <Image
-              style='width: 30px;height: 30px;background: #fff;'
+              style='margin-right: 10px;width: 30px;height: 30px;background: #fff; vertical-align:top;box-shadow: 3px 3px #da0289;'
+              src='https://camo.githubusercontent.com/3e1b76e514b895760055987f164ce6c95935a3aa/687474703a2f2f73746f726167652e333630627579696d672e636f6d2f6d74642f686f6d652f6c6f676f2d3278313531333833373932363730372e706e67'
+            />
+            <Text>题目：死党</Text>
+            <Icon className="topic" size='14' type='clear' color='red'/>
+          </View>
+          <View className="player">
+            <Image
+              style='width: 30px;height: 30px;margin-left:10px;background: #fff;'
+              src='https://camo.githubusercontent.com/3e1b76e514b895760055987f164ce6c95935a3aa/687474703a2f2f73746f726167652e333630627579696d672e636f6d2f6d74642f686f6d652f6c6f676f2d3278313531333833373932363730372e706e67'
+            />
+            <Image
+              style='width: 30px;height: 30px;margin-left:10px;background: #fff;'
+              src='https://camo.githubusercontent.com/3e1b76e514b895760055987f164ce6c95935a3aa/687474703a2f2f73746f726167652e333630627579696d672e636f6d2f6d74642f686f6d652f6c6f676f2d3278313531333833373932363730372e706e67'
+            />
+            <Image
+              style='width: 30px;height: 30px;margin-left:10px;background: #fff;'
               src='https://camo.githubusercontent.com/3e1b76e514b895760055987f164ce6c95935a3aa/687474703a2f2f73746f726167652e333630627579696d672e636f6d2f6d74642f686f6d652f6c6f676f2d3278313531333833373932363730372e706e67'
             />
           </View>
+        </View>
+        <View>
+          <Canvas style='width: 100%; height: 350px;background-color: #fff' canvasId='canvas'/>
+        </View>
+        <View className="tool">
+          <View className="lineWidth">
+            <Text>粗细</Text>
+            <Slider className="slider" activeColor='#fdcdb7' blockSize='16' backgroundColor="#fff" step='1' value='20'
+                    showValue min='0' max='100'/>
+          </View>
+          <View className="operate">
+            <View className="ico">
+              <Image
+                style='width: 20px;height: 20px;'
+                src={Back}
+              />
+            </View>
+            <View className="ico">
+              <Image
+                style='width: 20px;height: 20px;margin-right:3px;'
+                src={Eraser}
+              />
+              <Text>橡皮</Text>
+            </View>
+            <View className="ico">
+              <Image
+                style='width: 20px;height: 20px;margin-right:3px;'
+                src={Delete}
+              />
+              <Text>清除</Text>
+            </View>
+          </View>
+        </View>
+        <View className="colors">
+         <Text>颜色</Text>
+          <ScrollView>{this.props.colors}
+            {/*{this.props.colors.map((item,index)=>{
+              <View className="color"></View>
+            })}*/}
+          </ScrollView>
         </View>
       </View>
     )
@@ -103,4 +165,4 @@ class Index extends Component {
 //
 // #endregion
 
-export default Index as ComponentClass<PageOwnProps, PageState>
+export default Index as ComponentClass < PageOwnProps, PageState >
