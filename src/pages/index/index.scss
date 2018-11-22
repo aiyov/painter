@@ -63,9 +63,36 @@ page {
   height: 80px/$scale;
   font-size: 32px;
 }
+
 .color {
-  margin-left: 40px/$scale;
+  display: inline-block;
+  margin-right: 40px/$scale;
   width: 80px/$scale;
   height: 80px/$scale;
   border-radius: 4px/$scale;
+  background-color: #da0289;
+}
+.colorsScroll {
+  display: flex;
+  flex: 1;
+  padding-left: 48px/$scale;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.scrollTip {
+  display: block;
+  margin-top: 25px/$scale;
+  width: 100%;
+  font-size: 20px;
+  text-align: right;
+  color: #999;
+}
+.btn {
+  margin: 35px/$scale 80px/$scale 0;
+  border: none;
+  color: #333;
+  background-color: #fff017;
+}
+.btn:after{
+  border: none;
 }

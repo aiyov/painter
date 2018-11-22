@@ -2,6 +2,7 @@ import {ComponentClass} from 'react';
 import Taro, {Component, Config} from '@tarojs/taro';
 import {View, Button, Text, Icon, Canvas, Slider, ScrollView} from '@tarojs/components';
 import {connect} from '@tarojs/redux';
+import Paint from '../../components/canvas'
 
 import Back from '../../assets/ico/back.svg';
 import Delete from '../../assets/ico/delete.svg';
@@ -114,7 +115,7 @@ class Index extends Component {
           </View>
         </View>
         <View>
-          <Canvas style='width: 100%; height: 350px;background-color: #fff' canvasId='canvas'/>
+          <Paint />
         </View>
         <View className="tool">
           <View className="lineWidth">
@@ -146,13 +147,15 @@ class Index extends Component {
           </View>
         </View>
         <View className="colors">
-         <Text>颜色</Text>
-          <ScrollView>{this.props.colors}
-            {/*{this.props.colors.map((item,index)=>{
-              <View className="color"></View>
-            })}*/}
+          <Text className="colorTitle">颜色</Text>
+          <ScrollView scrollX="true" className="colorsScroll">
+            {this.props.counter.colors.map((item, index) => {
+              return <View className="color" key={index}>{item}</View>
+            })}
           </ScrollView>
         </View>
+        <Text className="scrollTip">*左划选更多颜色</Text>
+        <Button size="max" className="btn">发起猜猜</Button>
       </View>
     )
   }
@@ -165,4 +168,4 @@ class Index extends Component {
 //
 // #endregion
 
-export default Index as ComponentClass < PageOwnProps, PageState >
+export default Index as ComponentClass<PageOwnProps, PageState>
