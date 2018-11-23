@@ -1,3 +1,3 @@
 export const CHANGCOLOR = 'CHANGCOLOR'
 export const CHANGELINEWIDTH = 'CHANGELINEWIDTH'
-export const MINUS = 'MINUS'
+export const DRAW = 'DRAW'

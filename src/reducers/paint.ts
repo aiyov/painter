@@ -1,4 +1,4 @@
-import { CHANGCOLOR, CHANGELINEWIDTH } from '../constants/canvas'
+import { CHANGCOLOR, CHANGELINEWIDTH, DRAW } from '../constants/canvas'
 
 const INITIAL_STATE = {
   lineWidth: 10,
@@ -8,10 +8,12 @@ const INITIAL_STATE = {
     '#966b5a','#fca7a4','#eb2429','#2b5e7d','#4b495e',
     '#e6d23f','#626262','#63b00c','#63f5c4','#17baf3'
   ],
-  color: '#fff001'
+  color: '#fff001',
+  pathList: []/*路径集合*/
 }
 
 export default function canvas (state = INITIAL_STATE, action) {
+  console.log(action.type)
   switch (action.type) {
     case CHANGCOLOR:
       return {
@@ -23,6 +25,11 @@ export default function canvas (state = INITIAL_STATE, action) {
          ...state,
          lineWidth: action.lineWidth
        }
+    case DRAW:
+      return {
+        ...state,
+        pathList: action.pathList
+      }
      default:
        return state
   }

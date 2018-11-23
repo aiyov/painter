@@ -8,19 +8,21 @@ import Back from '../../assets/ico/back.svg';
 import Delete from '../../assets/ico/delete.svg';
 import Eraser from '../../assets/ico/eraser.svg';
 
-import {changeColor, changeLineWidth} from '../../actions/paint'
+import {changeColor, changeLineWidth, draw} from '../../actions/paint'
 
 
 type PageStateProps = {
   canvas: {
     lineWidth: number,
     colors: Array,
+    pathList: Array
   }
 }
 
 type PageDispatchProps = {
   changeColor: (color:string) => void,
-  changeLineWidth: (lineWidth:object) => void
+  changeLineWidth: (lineWidth:object) => void,
+  draw: (pathList:object) => void
 }
 
 type PageOwnProps = {}
@@ -41,8 +43,10 @@ interface Tool {
     dispatch(changeColor(color))
   },
   changeLineWidth(slider) {
-    console.log(slider.detail.value)
     dispatch(changeLineWidth(slider.detail.value))
+  },
+  draw(pathList) {
+    dispatch(draw(pathList))
   }
 }))
 
@@ -55,9 +59,13 @@ class Tool extends Component {
     addGlobalClass: true
   }
 
+  draw() {
+    var length = this.props.canvas.pathList
+    var pathList = this.props.canvas.pathList.slice(0, length-1)
+    this.props.draw(pathList)
+  }
+
   componentDidShow() {
-    console.log('===========')
-    console.log(this.props)
   }
 
   render() {
@@ -73,7 +81,7 @@ class Tool extends Component {
             />
           </View>
           <View className='operate'>
-            <View className='ico'>
+            <View className='ico' onClick={this.draw.bind(this)}>
               <Image style='width: 20px;height: 20px;' src={Back} />
             </View>
             <View className='ico' onClick={this.props.changeColor.bind(this,'#fff')}>
