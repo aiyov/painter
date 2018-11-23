@@ -1,8 +1,40 @@
+import {ComponentClass} from 'react';
 import Taro, {Component} from '@tarojs/taro';
 import PropTypes from 'prop-types';
+import {connect} from '@tarojs/redux';
 import {Canvas} from '@tarojs/components';
 
-export default class Paint extends Component {
+type PageStateProps = {
+   canvas: {
+    lineWidth: number,
+    colors: [],
+  }
+}
+
+type PageDispatchProps = {
+  changeColor: (color:string) => void
+}
+
+type PageOwnProps = {}
+
+type PageState = {}
+
+type IProps = PageStateProps & PageDispatchProps & PageOwnProps
+
+interface Tool {
+  props: IProps;
+}
+
+
+@connect(({canvas}) => ({
+  canvas
+}),(dispatch) => ({
+  changeColor(color) {
+    dispatch(changeColor(color))
+  }
+}))
+
+class Paint extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -13,9 +45,8 @@ export default class Paint extends Component {
         lineWidth: '',
         poslist: []
       },
-      ctx: null,
-      color: 'blue',
-      linewidth: 2
+      ctx: {},
+      lineWidth: 2
     }
   }
   componentDidMount() {
@@ -23,18 +54,22 @@ export default class Paint extends Component {
       ctx: Taro.createCanvasContext('canvas',this.$scope)
     })
   }
+  componentWillUpdate() {
+    // console.log(a,b)
+    /*todo 实时传输数据*/
+  }
   startdraw(event) {
-    this.state.ctx.setLineWidth(this.state.linewidth); /*设置画布颜色，线条端点样式，线宽*/
+    this.state.ctx.setLineWidth(this.props.canvas.lineWidth); /*设置画布颜色，线条端点样式，线宽*/
     this.state.ctx.setLineCap('round');
-    this.state.ctx.setStrokeStyle(this.state.color)
+    this.state.ctx.setStrokeStyle(this.props.canvas.color)
 
     this.state.ctx.moveTo(event.touches[0].x, event.touches[0].y)/*画点*/
     this.state.ctx.lineTo(event.touches[0].x, event.touches[0].y)
     this.state.ctx.stroke()
     this.state.ctx.draw(true)
     this.copy = {
-      color: this.state.color,
-      lineWidth: this.state.lineWidth,
+      color: this.props.canvas.color,
+      lineWidth: this.props.canvas.lineWidth,
       poslist: [{x:event.touches[0].x,y:event.touches[0].y}]
     }
     var pathList = this.state.pathList;
@@ -57,7 +92,7 @@ export default class Paint extends Component {
     })
   }
   drawend() {
-    console.log(this.state.pathList)
+    // console.log(this.state.pathList)
   }
   render() {
     return (
@@ -75,3 +110,5 @@ Paint.propTypes = {
   lineWidth: PropTypes.number,
   color: PropTypes.string
 };
+
+export default Paint as ComponentClass<PageOwnProps, PageState>;
