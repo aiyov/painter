@@ -62,21 +62,26 @@ class Paint extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     /*todo 实时传输数据*/
-    console.log(nextProps.canvas.pathList.length, nextState.pathList.length)
-    if(nextProps.canvas.pathList.length == nextState.pathList.length) {
+    if (nextProps.canvas.pathList.length == nextState.pathList.length) {
       return false
     }
   }
 
   componentWillUpdate(nextProps, nextState) {
-    this.drawbydata(nextProps.canvas.pathList)/*返回上一步*/
+    if(nextProps.canvas.pathList.length < nextState.pathList.length) {
+      this.drawbydata(nextProps.canvas.pathList)
+    }
+    /*返回上一步*/
   }
 
   drawbydata(pathList) {
+    this.state.ctx.clearRect(0, 0, 400, 350)/*清除画布*/
+    this.state.ctx.draw()
     this.setState({
-      pathList: pathList
+      pathList: pathList,
+    },()=>{
+      console.log(pathList,this.state.pathList)
     })
-
     pathList.map((item, index) => {
       /*设置画布颜色，线条端点样式，线宽*/
       this.state.ctx.setLineWidth(item.lineWidth);
@@ -124,6 +129,8 @@ class Paint extends Component {
     this.state.ctx.draw(true)
 
     this.copy.poslist.push({x: event.touches[0].x, y: event.touches[0].y})
+    console.log('================')
+    console.log(this.state.pathList)
     this.props.draw(JSON.parse(JSON.stringify(this.state.pathList)))
     /*时实更新数据*/
     this.setState({
@@ -132,8 +139,8 @@ class Paint extends Component {
   }
 
   drawend() {
-    this.state.ctx.clearRect(0,0,400,350)
-    // console.log(this.state.pathList)
+    /*this.state.ctx.clearRect(0, 0, 400, 350)
+    this.state.ctx.draw()*/
   }
 
   render() {
