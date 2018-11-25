@@ -5,6 +5,7 @@ import {connect} from '@tarojs/redux';
 import {Canvas} from '@tarojs/components';
 
 import {draw} from '../../actions/paint'
+
 type PageStateProps = {
   canvas: {
     lineWidth: number,
@@ -50,6 +51,7 @@ class Paint extends Component {
       ctx: {},
       lineWidth: 2
     }
+    this.drawbydata = this.drawbydata.bind(this)
   }
 
   componentDidMount() {
@@ -58,21 +60,46 @@ class Paint extends Component {
     })
   }
 
-  componentWillUpdate(nextProps) {
-    console.log('==========')
-    console.log(nextProps.canvas.pathList.length)
+  shouldComponentUpdate(nextProps, nextState) {
     /*todo 实时传输数据*/
+    console.log(nextProps.canvas.pathList.length, nextState.pathList.length)
+    if(nextProps.canvas.pathList.length == nextState.pathList.length) {
+      return false
+    }
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    this.drawbydata(nextProps.canvas.pathList)/*返回上一步*/
+  }
+
+  drawbydata(pathList) {
+    this.setState({
+      pathList: pathList
+    })
+
+    pathList.map((item, index) => {
+      /*设置画布颜色，线条端点样式，线宽*/
+      this.state.ctx.setLineWidth(item.lineWidth);
+      this.state.ctx.setStrokeStyle(item.color);
+      this.state.ctx.setLineCap('round');
+      /*画点*/
+      this.state.ctx.moveTo(item.poslist[0].x, item.poslist[0].y);
+      item.poslist.map((pos, index) => {
+        this.state.ctx.lineTo(pos.x, pos.y);
+      })
+      this.state.ctx.stroke()
+      this.state.ctx.draw(true)
+    })
   }
 
   startdraw(event) {
-    this.state.ctx.setLineWidth(this.props.canvas.lineWidth);
     /*设置画布颜色，线条端点样式，线宽*/
+    this.state.ctx.setLineWidth(this.props.canvas.lineWidth);
+    this.state.ctx.setStrokeStyle(this.props.canvas.color);
     this.state.ctx.setLineCap('round');
-    this.state.ctx.setStrokeStyle(this.props.canvas.color)
-
-    this.state.ctx.moveTo(event.touches[0].x, event.touches[0].y)
     /*画点*/
-    this.state.ctx.lineTo(event.touches[0].x, event.touches[0].y)
+    this.state.ctx.moveTo(event.touches[0].x, event.touches[0].y);
+    this.state.ctx.lineTo(event.touches[0].x, event.touches[0].y);
     this.state.ctx.stroke()
     this.state.ctx.draw(true)
     this.copy = {
@@ -86,6 +113,8 @@ class Paint extends Component {
       pos: {x: event.touches[0].x, y: event.touches[0].y},
       pathList: pathList
     })
+    this.props.draw(JSON.parse(JSON.stringify(pathList)))
+    /*时实更新数据*/
   }
 
   draw(event) {
@@ -95,14 +124,15 @@ class Paint extends Component {
     this.state.ctx.draw(true)
 
     this.copy.poslist.push({x: event.touches[0].x, y: event.touches[0].y})
-
+    this.props.draw(JSON.parse(JSON.stringify(this.state.pathList)))
+    /*时实更新数据*/
     this.setState({
       pos: {x: event.touches[0].x, y: event.touches[0].y}
     })
   }
 
   drawend() {
-    this.props.draw(this.state.pathList)
+    this.state.ctx.clearRect(0,0,400,350)
     // console.log(this.state.pathList)
   }
 

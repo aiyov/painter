@@ -60,7 +60,7 @@ class Tool extends Component {
   }
 
   draw() {
-    var length = this.props.canvas.pathList
+    var length = this.props.canvas.pathList.length;
     var pathList = this.props.canvas.pathList.slice(0, length-1)
     this.props.draw(pathList)
   }
