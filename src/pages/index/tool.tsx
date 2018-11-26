@@ -20,9 +20,9 @@ type PageStateProps = {
 }
 
 type PageDispatchProps = {
-  changeColor: (color:string) => void,
-  changeLineWidth: (lineWidth:object) => void,
-  draw: (pathList:object) => void
+  changeColor: (color: string) => void,
+  changeLineWidth: (lineWidth: object) => void,
+  draw: (pathList: object) => void
 }
 
 type PageOwnProps = {}
@@ -38,7 +38,7 @@ interface Tool {
 
 @connect(({canvas}) => ({
   canvas
-}),(dispatch) => ({
+}), (dispatch) => ({
   changeColor(color) {
     dispatch(changeColor(color))
   },
@@ -53,6 +53,9 @@ interface Tool {
 class Tool extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      activeBg: 0 /*默认不添加点击背景色*/
+    }
   }
 
   static options = {
@@ -61,11 +64,34 @@ class Tool extends Component {
 
   draw() {
     var length = this.props.canvas.pathList.length;
-    var pathList = this.props.canvas.pathList.slice(0, length-1)
+    var pathList = this.props.canvas.pathList.slice(0, length - 1)
+    this.setState({
+      activeBg: 1 /*按钮背景*/
+    })
     this.props.draw(pathList)
   }
 
-  componentDidShow() {
+  clearCanvas() {
+    this.setState({
+      activeBg: 2 /*按钮背景*/
+    })
+    Taro.showModal({
+      title: '提示',
+      content: '真的要清空画布吗？',
+      cancelText: '假的',
+      confirmText: '真的',
+      confirmColor: '#79d1b9'
+    }).then(res => {
+      if (res.confirm) {
+        this.props.draw([]);
+      }
+    })
+  }
+
+  removeBg() {
+    this.setState({
+      activeBg: 0 /*取消返回按钮背景*/
+    })
   }
 
   render() {
@@ -76,20 +102,23 @@ class Tool extends Component {
             <Text>粗细</Text>
             <Slider
               className='slider' activeColor={this.props.canvas.color} blockSize='16'
-              backgroundColor="#fff" step='1' value= {this.props.canvas.lineWidth}
+              backgroundColor="#fff" step='1' value={this.props.canvas.lineWidth}
               showValue min='2' max='20' onChange={this.props.changeLineWidth}
             />
           </View>
           <View className='operate'>
-            <View className='ico' onClick={this.draw.bind(this)}>
-              <Image style='width: 20px;height: 20px;' src={Back} />
+            <View className={this.activeBg == 1 ? 'activeIco ico' : 'ico'} onTouchend={this.removeBg.bind(this)}
+                  onTouchstart={this.draw.bind(this)}>
+              <Image style='width: 20px;height: 20px;padding-left: 5px' src={Back}/>
             </View>
-            <View className='ico' onClick={this.props.changeColor.bind(this,'#fff')}>
-              <Image style='width: 20px;height: 20px;margin-right:3px;' src={Eraser} />
+            <View className={this.props.canvas.color === '#fff' ? 'activeIco ico' : 'ico'}
+                  onClick={this.props.changeColor.bind(this, '#fff')}>
+              <Image style='width: 20px;height: 20px;' src={Eraser}/>
               <Text>橡皮</Text>
             </View>
-            <View className='ico'>
-              <Image style='width: 20px;height: 20px;margin-right:3px;' src={Delete} />
+            <View className={this.activeBg == 2 ? 'activeIco ico' : 'ico'} onTouchstart={this.clearCanvas.bind(this)}
+                  onTouchend={this.removeBg.bind(this)}>
+              <Image style='width: 20px;height: 20px;' src={Delete}/>
               <Text>清除</Text>
             </View>
           </View>
@@ -98,7 +127,8 @@ class Tool extends Component {
           <Text className='colorTitle'>颜色</Text>
           <ScrollView scrollX='true' className='colorsScroll'>
             {this.props.canvas.colors.map((item, index) => {
-              return <View style={`background:${item}`} onClick={this.props.changeColor.bind(this,item)} className='color' key={index}></View>
+              return <View style={`background:${item}`} onClick={this.props.changeColor.bind(this, item)}
+                           className={item===this.props.canvas.color?`color-${item.slice(1)} color`:`color`} key={index}></View>
             })}
           </ScrollView>
         </View>

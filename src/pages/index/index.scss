@@ -1,4 +1,6 @@
 $scale: 1.4;
+$color: 'fc039d' 'ff4d3f' 'fda601' 'fff001' '010101' '00b282' '004bfe' 'c9c9c9' '8efbf6' '79d1b9' 'bb18fd' 'ffffcd' 'fdcdb7' '993400' '966b5a' 'fca7a4' 'eb2429' '2b5e7d' '4b495e' 'e6d23f' '626262' '63b00c' '63f5c4' '17baf3';
+
 
 page {
   height: 100%;
@@ -56,8 +58,16 @@ page {
 .ico {
   display: flex;
   align-items: center;
-  margin-left: 24px;
+  margin-left: 10px/$scale;
+  padding-right: 14px/$scale;
+  height: 60px/$scale;
 }
+
+.activeIco {
+  background-color: #fff;
+  border-radius: 40px/$scale;
+}
+
 .colors {
   align-items: center;
   height: 80px/$scale;
@@ -65,12 +75,45 @@ page {
 }
 
 .color {
+  position: relative;
   display: inline-block;
   margin-right: 40px/$scale;
   width: 80px/$scale;
   height: 80px/$scale;
   border-radius: 4px/$scale;
 }
+.color:after {
+  position: absolute;
+  bottom: -10px/$scale;
+  content: '';
+  display: block;
+  height: 6px/$scale;
+  transition: .3s;
+}
+
+@include author-images  /*色块选中样式以及动画*/
+
+@mixin author-images {
+  @each $author in $color {
+    .color-#{$author}:after {
+      background: #{'#'+$author};
+      animation:mymove .5s normal forwards; /*Safari and Chrome*/
+    }
+  }
+}
+
+@keyframes mymove
+{
+  from {
+    width:0;
+    left: 50%;
+  }
+  to {
+    width:100%;
+    left: 0;
+  }
+}
+
 .colorsScroll {
   display: flex;
   flex: 1;

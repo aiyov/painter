@@ -13,7 +13,6 @@ const INITIAL_STATE = {
 }
 
 export default function canvas (state = INITIAL_STATE, action) {
-  console.log(action.type)
   switch (action.type) {
     case CHANGCOLOR:
       return {

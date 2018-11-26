@@ -54,34 +54,26 @@ class Paint extends Component {
   }
 
   componentDidMount() {
+    Taro.getSystemInfo({
+      success:(res)=>{
+        this.devicesWidth = res.windowWidth
+      }
+    })
     this.setState({
       ctx: Taro.createCanvasContext('canvas', this.$scope)
     })
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    /*todo 实时传输数据*/
-    if (nextProps.canvas.pathList.length == nextState.pathList.length) {
-      return false
+  componentDidUpdate(nextProps, nextState) {
+    if(this.props.canvas.pathList.length < this.state.pathList.length) {
+      this.drawbydata(this.props.canvas.pathList)
     }
-  }
-
-  componentWillUpdate(nextProps, nextState) {
-    if(nextProps.canvas.pathList.length < nextState.pathList.length) {
-      this.drawbydata(JSON.parse(JSON.stringify(nextProps.canvas.pathList)))
-    }
-    /*返回上一步*/
   }
 
   drawbydata(pathList) {
-    this.state.ctx.clearRect(0, 0, 400, 350)/*清除画布*/
+    this.state.ctx.clearRect(0, 0, this.devicesWidth, 350)/*清除画布*/
     this.state.ctx.draw()
-    this.setState({
-      pathList: JSON.parse(JSON.stringify(pathList)),
-    })
-    setTimeout(()=>{
-      console.log(this.state.pathList)
-    },1000)
+    this.setState({pathList: pathList,})
     pathList.map((item, index) => {
       /*设置画布颜色，线条端点样式，线宽*/
       this.state.ctx.setLineWidth(item.lineWidth);
@@ -89,7 +81,7 @@ class Paint extends Component {
       this.state.ctx.setLineCap('round');
       /*画点*/
       this.state.ctx.moveTo(item.poslist[0].x, item.poslist[0].y);
-      item.poslist.map((pos, index) => {
+      item.poslist.map((pos) => {
         this.state.ctx.lineTo(pos.x, pos.y);
       })
       this.state.ctx.stroke()
@@ -112,7 +104,7 @@ class Paint extends Component {
       lineWidth: this.props.canvas.lineWidth,
       poslist: [{x: event.touches[0].x, y: event.touches[0].y}]
     }/*todo this.state.pathList有问题*/
-    var pathList = this.props.canvas.pathList;
+    var pathList = this.state.pathList;
     pathList.push(this.copy)
     this.setState({
       pos: {x: event.touches[0].x, y: event.touches[0].y},
@@ -129,11 +121,11 @@ class Paint extends Component {
     this.state.ctx.draw(true)
 
     this.copy.poslist.push({x: event.touches[0].x, y: event.touches[0].y})
-    this.props.draw(JSON.parse(JSON.stringify(this.state.pathList)))
     /*时实更新数据*/
     this.setState({
       pos: {x: event.touches[0].x, y: event.touches[0].y}
-    })
+    });
+    this.props.draw(JSON.parse(JSON.stringify(this.state.pathList)))
   }
 
   drawend() {
