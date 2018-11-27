@@ -82,17 +82,8 @@ class Index extends Component {
   }
 
   componentDidMount() {
-    var CreateWebSocket = (function () {
-      return function (urlValue) {
-        console.log(WebSocket)
-        if (WebSocket) return new WebSocket(urlValue);
-        // if (MozWebSocket) return new MozWebSocket(urlValue);
-        return false;
-      }
-    })()
-    // 实例化websoscket websocket有两种协议ws(不加密)和wss(加密)
     var webSocket = Taro.connectSocket({
-      url: 'ws://192.168.28.108:3000/paint/test/123'
+      url: 'ws://192.168.1.232:3000/paint'
     })
     console.log(webSocket)
     webSocket.onopen = function (evt) {
