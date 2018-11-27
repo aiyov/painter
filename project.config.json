@@ -2,7 +2,7 @@
 	"miniprogramRoot": "dist/",
 	"projectname": "paint",
 	"description": "我画你猜",
-	"appid": "wx913b77e3da0dded4",
+	"appid": "wx8c1872e239b32c33",
 	"setting": {
 		"urlCheck": true,
 		"es6": false,
@@ -14,6 +14,6 @@
 		"uglifyFileName": false
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.2.3",
+	"libVersion": "2.3.2",
 	"condition": {}
 }

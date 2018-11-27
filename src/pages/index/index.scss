@@ -91,8 +91,6 @@ page {
   transition: .3s;
 }
 
-@include author-images  /*色块选中样式以及动画*/
-
 @mixin author-images {
   @each $author in $color {
     .color-#{$author}:after {
@@ -138,3 +136,4 @@ page {
 .btn:after{
   border: none;
 }
+@include author-images  /*色块选中样式以及动画*/
