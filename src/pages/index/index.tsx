@@ -82,24 +82,36 @@ class Index extends Component {
   }
 
   componentDidMount() {
-    var webSocket = Taro.connectSocket({
-      url: 'ws://192.168.1.232:3000/paint'
+    var paint = Taro.connectSocket({
+      url: 'ws://192.168.28.200:3000'
+    }).then(task => {
+      this.setState({
+        ws:task
+      })
+      task.onOpen(function () {
+        console.log('onOpen')
+        task.send({ data: '我来自微信小程序' })
+      })
+      task.onMessage(function (msg) {
+        console.log('onMessage: ', msg)
+      })
+      task.onError(function () {
+        console.log('onError')
+      })
+      task.onClose(function (e) {
+        console.log('onClose: ', e)
+      })
     })
-    console.log(webSocket)
-    webSocket.onopen = function (evt) {
-      // 一旦连接成功，就发送第一条数据
-      webSocket.send("第一条数据")
-    }
-    webSocket.onmessage = function (evt) {
-      // 这是服务端返回的数据
-      console.log("服务端说" + evt.data)
-    }
-    // 关闭连接
-    webSocket.onclose = function (evt) {
-      console.log("Connection closed.")
-    }
   }
-
+  sendMessage() {
+    console.log(this.state.ws)
+    this.state.ws.send({
+      data: {
+        event: 'paint',
+        message: '发起猜猜',
+      }
+    })
+  }
   render() {
     return (
       <View className='index'>
@@ -108,7 +120,7 @@ class Index extends Component {
           <Paint />
         </View>
         <Tool />
-        <Button size="max" className="btn">发起猜猜</Button>
+        <Button size="max" className="btn" onClick={this.sendMessage.bind(this)}>发起猜猜</Button>
       </View>
     )
   }
