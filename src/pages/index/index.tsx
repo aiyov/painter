@@ -6,7 +6,7 @@ import Paint from './canvas'
 import Header from './header'
 import Tool from './tool'
 
-import {changeColor, minus, asyncAdd} from '../../actions/paint'
+import {changeColor, socket, draw, chat, asyncAdd} from '../../actions/paint'
 
 import './index.scss'
 
@@ -29,9 +29,9 @@ type PageStateProps = {
 }
 
 type PageDispatchProps = {
-  changeColor: () => void
-  dec: () => void
-  asyncAdd: () => any
+  changeColor: () => void,
+  asyncAdd: () => any,
+  socket: () => void
 }
 
 type PageOwnProps = {}
@@ -50,8 +50,14 @@ interface Index {
   changeColor(a) {
     dispatch(changeColor(a))
   },
-  dec() {
-    dispatch(minus())
+  connectSocket(io) {
+    dispatch(socket(io))
+  },
+  paint(path) {
+    dispatch(draw(path))
+  },
+  chat(words) {
+    dispatch(chat(words))
   },
   asyncAdd() {
     dispatch(asyncAdd())
@@ -82,18 +88,22 @@ class Index extends Component {
   }
 
   componentDidMount() {
-    var paint = Taro.connectSocket({
-      url: 'ws://192.168.28.200:3000'
+    Taro.connectSocket({
+      url: 'ws://192.168.28.182:3000'
     }).then(task => {
       this.setState({
         ws:task
       })
-      task.onOpen(function () {
-        console.log('onOpen')
-        task.send({ data: '我来自微信小程序' })
+      task.onOpen(()=> {
+        this.props.connectSocket(task)
       })
       task.onMessage(function (msg) {
-        console.log('onMessage: ', msg)
+        var msg = JSON.parse(msg);
+        if (msg.type === 'chat') {
+          this.props.chat(msg.data)
+        } else if (msg.type === 'paint') {
+          this.props.paint(msg.data)
+        }
       })
       task.onError(function () {
         console.log('onError')
@@ -104,12 +114,11 @@ class Index extends Component {
     })
   }
   sendMessage() {
-    console.log(this.state.ws)
-    this.state.ws.send({
-      data: {
-        event: 'paint',
-        message: '发起猜猜',
-      }
+    this.props.canvas.socket.send({
+      data: [JSON.stringify({
+        type: 'word',
+        data: '哈哈哈哈'
+      })]
     })
   }
   render() {

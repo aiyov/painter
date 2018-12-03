@@ -2,6 +2,8 @@ import {
   CHANGCOLOR,
   CHANGELINEWIDTH,
   DRAW,
+  SOCKET,
+  CHAT
 } from '../constants/canvas'
 
 export const changeColor = (color:string) => {
@@ -20,6 +22,18 @@ export const draw = (pathList:Array<{}>) => {
   return {
     type: DRAW,
     pathList
+  }
+}
+export const chat = (words:Object) => {
+  return {
+    type: CHAT,
+    words
+  }
+}
+export function socket(socketio) {
+  return {
+    type: SOCKET,
+    socketio
   }
 }
 // 异步的action

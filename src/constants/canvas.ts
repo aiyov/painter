@@ -1,3 +1,6 @@
 export const CHANGCOLOR = 'CHANGCOLOR'
 export const CHANGELINEWIDTH = 'CHANGELINEWIDTH'
 export const DRAW = 'DRAW'
+export const PAINT = 'PAINT'
+export const CHAT = 'CHAT'
+export const SOCKET = 'SOCKET'
